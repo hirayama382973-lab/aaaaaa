@@ -10,41 +10,41 @@
 <link rel="manifest" href="manifest.json">
 <title>🧺 天気ウィジェット</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+
 :root{--bg:#0a1625;--bg2:#0d1e30;--cyan:#33bbee;--orange:#cc7733;--red:#ff7777;--green:#55cc88;--yellow:#eecc44;--gray:#aaccdd;--dim:#335566;--moon:#556688;--white:#ffffff;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--white);font-family:'Noto Sans JP',sans-serif;min-height:100vh;padding:12px;}
-h1{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray);text-align:center;margin-bottom:10px;letter-spacing:2px;opacity:0.5;}
+h1{font-family:monospace;font-size:12px;color:var(--gray);text-align:center;margin-bottom:10px;letter-spacing:2px;opacity:0.5;}
 .card{background:var(--bg2);border:1px solid var(--dim);border-radius:12px;padding:12px;margin-bottom:10px;}
-.card-title{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-family:monospace;font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
 .badge{font-size:11px;padding:2px 8px;border-radius:20px;background:#1a3a1a;color:var(--green);}
 .badge.dummy{background:#3a3a1a;color:var(--yellow);}
-.info-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--gray);margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.info-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--gray);margin-bottom:8px;font-family:monospace;}
 canvas{width:100%;border-radius:6px;display:block;}
-.x-axis{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;margin-top:4px;padding:0 2px;overflow:hidden;}
-.done-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+.x-axis{display:flex;justify-content:space-between;font-family:monospace;font-size:10px;margin-top:4px;padding:0 2px;overflow:hidden;}
+.done-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-family:monospace;}
 .done-text{font-size:14px;font-weight:700;color:var(--red);}
 .done-text.pending{color:var(--orange);font-size:12px;}
 .legend{font-size:10px;color:var(--orange);}
 .detail-section{margin-top:10px;border-top:1px solid var(--dim);padding-top:8px;}
-.detail-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);font-weight:700;margin-bottom:6px;}
-.detail-row{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;margin-bottom:3px;}
+.detail-title{font-family:monospace;font-size:12px;color:var(--cyan);font-weight:700;margin-bottom:6px;}
+.detail-row{display:flex;gap:8px;font-family:monospace;font-size:11px;margin-bottom:3px;}
 .detail-label{color:var(--cyan);min-width:52px;}
 .detail-val{color:var(--white);flex:1;word-break:break-all;}
 .tab-bar{display:flex;gap:8px;margin-bottom:10px;}
-.tab{flex:1;padding:10px;border-radius:8px;border:1px solid var(--dim);background:var(--bg2);color:var(--gray);font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;text-align:center;transition:all 0.2s;}
+.tab{flex:1;padding:10px;border-radius:8px;border:1px solid var(--dim);background:var(--bg2);color:var(--gray);font-family:monospace;font-size:12px;cursor:pointer;text-align:center;transition:all 0.2s;}
 .tab.active{border-color:var(--cyan);color:var(--cyan);background:#0d2233;}
 .page{display:none;}.page.active{display:block;}
-.refresh-btn{display:block;width:100%;padding:10px;background:#0d2233;border:1px solid var(--cyan);border-radius:8px;color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer;margin-bottom:10px;text-align:center;}
+.refresh-btn{display:block;width:100%;padding:10px;background:#0d2233;border:1px solid var(--cyan);border-radius:8px;color:var(--cyan);font-family:monospace;font-size:13px;cursor:pointer;margin-bottom:10px;text-align:center;}
 .refresh-btn:active{opacity:0.7;}
-.loading{text-align:center;padding:40px;color:var(--gray);font-family:'JetBrains Mono',monospace;font-size:13px;}
+.loading{text-align:center;padding:40px;color:var(--gray);font-family:monospace;font-size:13px;}
 .slider-wrap{margin:10px 0 6px;}
-.slider-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.slider-label{font-family:monospace;font-size:12px;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
 .slider-label .sl-val{color:var(--yellow);font-size:15px;font-weight:700;background:#0d2233;padding:2px 10px;border-radius:6px;border:1px solid var(--cyan);}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:4px;background:var(--dim);outline:none;cursor:pointer;}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--cyan);border:3px solid var(--bg2);box-shadow:0 0 8px rgba(51,187,238,0.6);}
 input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--cyan);border:3px solid var(--bg2);}
-.slider-ticks{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--moon);margin-top:4px;padding:0 4px;}
+.slider-ticks{display:flex;justify-content:space-between;font-family:monospace;font-size:9px;color:var(--moon);margin-top:4px;padding:0 4px;}
 </style>
 </head>
 <body>
@@ -262,7 +262,7 @@ function drawTempGraph(data,allData,startOffset,showCurrent,W,H,minT,maxT){
   const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
   const range=maxT-minT,xp=(i,l)=>(i/(l-1))*W,yp=t=>H-((t-minT)/range)*H;
   const y15=yp(15);
-  if(y15>=0&&y15<=H){ctx.strokeStyle='#888888';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,y15);ctx.lineTo(W,y15);ctx.stroke();ctx.fillStyle='#888888';ctx.font='9px JetBrains Mono,monospace';ctx.fillText('15°C',W-36,y15-3);}
+  if(y15>=0&&y15<=H){ctx.strokeStyle='#888888';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,y15);ctx.lineTo(W,y15);ctx.stroke();ctx.fillStyle='#888888';ctx.font='9px monospace';ctx.fillText('15°C',W-36,y15-3);}
   ctx.strokeStyle='#FF9F0A';ctx.lineWidth=2;ctx.beginPath();
   for(let i=0;i<data.length;i++){const x=xp(i,data.length),y=yp(data[i].temp);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
   ctx.fillStyle='#FF9F0A';for(let i=0;i<data.length;i++){ctx.beginPath();ctx.arc(xp(i,data.length),yp(data[i].temp),2,0,Math.PI*2);ctx.fill();}
@@ -274,12 +274,12 @@ function drawTempGraph(data,allData,startOffset,showCurrent,W,H,minT,maxT){
   }
   const temps=data.map(d=>d.temp),tMax=Math.max(...temps),tMin=Math.min(...temps),sorted=[...temps].sort((a,b)=>a-b),tMed=sorted[Math.floor(sorted.length/2)];
   [[tMax,'#FF3B30'],[tMin,'#5E5CE6'],[tMed,'#30B0C0']].forEach(([v,c])=>{ctx.strokeStyle=c;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,yp(v));ctx.lineTo(W,yp(v));ctx.stroke();});
-  ctx.font='bold 10px JetBrains Mono,monospace';ctx.fillStyle='#FF3B30';ctx.fillText(`最大${tMax}°`,4,yp(tMax)+12);
+  ctx.font='bold 10px monospace';ctx.fillStyle='#FF3B30';ctx.fillText(`最大${tMax}°`,4,yp(tMax)+12);
   const items=[{v:tMed,c:'#30B0C0',l:'中央'},{v:tMin,c:'#5E5CE6',l:'最小'}];
   let pos=items.map(item=>({...item,ty:yp(item.v)-13}));pos.sort((a,b)=>a.ty-b.ty);
   for(let i=1;i<pos.length;i++){if(pos[i].ty<pos[i-1].ty+13)pos[i].ty=pos[i-1].ty+13;}
   pos.forEach(item=>{ctx.fillStyle=item.c;ctx.fillText(`${item.l}${item.v}°`,4,Math.max(10,Math.min(H-2,item.ty)));});
-  if(showCurrent&&data.length>0){const cur=data[0].temp,x=xp(0,data.length),y=yp(cur);ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffffff';ctx.font='bold 12px JetBrains Mono,monospace';ctx.fillText(`${cur}°C`,x+6,y-4);}
+  if(showCurrent&&data.length>0){const cur=data[0].temp,x=xp(0,data.length),y=yp(cur);ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffffff';ctx.font='bold 12px monospace';ctx.fillText(`${cur}°C`,x+6,y-4);}
   return canvas;
 }
 
@@ -302,7 +302,7 @@ function renderTemp(json){
   const card=document.createElement('div');card.className='card';
   card.innerHTML=`<div class="card-title">📈 気温推移（〜${tom.getMonth()+1}/${tom.getDate()} 23:00）</div>`;
   card.appendChild(cTop);const sp=document.createElement('div');sp.style.height='6px';card.appendChild(sp);card.appendChild(cBot);
-  card.innerHTML+=`<div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:#fff">⚪ 12:00</span><span style="color:#FF3B30">🔴 23:00</span><span style="color:#aaa">赤:最大 青:最小 青緑:中央</span></div>`;
+  card.innerHTML+=`<div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-family:monospace;font-size:11px"><span style="color:#fff">⚪ 12:00</span><span style="color:#FF3B30">🔴 23:00</span><span style="color:#aaa">赤:最大 青:最小 青緑:中央</span></div>`;
   wrap.appendChild(card);wrap.style.display='block';document.getElementById('temp-loading').style.display='none';
 }
 
