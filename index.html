@@ -10,644 +10,322 @@
 <link rel="manifest" href="manifest.json">
 <title>🧺 天気ウィジェット</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
-
-  :root {
-    --bg: #0a1625;
-    --bg2: #0d1e30;
-    --cyan: #33bbee;
-    --orange: #cc7733;
-    --red: #ff7777;
-    --green: #55cc88;
-    --yellow: #eecc44;
-    --gray: #aaccdd;
-    --dim: #335566;
-    --moon: #556688;
-    --white: #ffffff;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--white);
-    font-family: 'Noto Sans JP', sans-serif;
-    min-height: 100vh;
-    padding: 12px;
-  }
-
-  h1 {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--gray);
-    text-align: center;
-    margin-bottom: 12px;
-    letter-spacing: 2px;
-    opacity: 0.6;
-  }
-
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--dim);
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
-  }
-
-  .card-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--white);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    background: #1a3a1a;
-    color: var(--green);
-  }
-  .badge.dummy { background: #3a3a1a; color: var(--yellow); }
-
-  .info-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 12px;
-    color: var(--gray);
-    margin-bottom: 8px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  canvas {
-    width: 100%;
-    border-radius: 6px;
-    display: block;
-  }
-
-  .x-axis {
-    display: flex;
-    justify-content: space-between;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--gray);
-    margin-top: 4px;
-    padding: 0 2px;
-  }
-
-  .done-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 8px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .done-text {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--red);
-  }
-
-  .done-text.pending { color: var(--orange); font-size: 12px; }
-
-  .legend {
-    font-size: 10px;
-    color: var(--orange);
-  }
-
-  .detail-section {
-    margin-top: 10px;
-    border-top: 1px solid var(--dim);
-    padding-top: 8px;
-  }
-
-  .detail-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--cyan);
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .detail-row {
-    display: flex;
-    gap: 8px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    margin-bottom: 3px;
-  }
-
-  .detail-label { color: var(--cyan); min-width: 52px; }
-  .detail-val { color: var(--white); flex: 1; word-break: break-all; }
-
-  .tab-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .tab {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--dim);
-    background: var(--bg2);
-    color: var(--gray);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.2s;
-  }
-
-  .tab.active {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    background: #0d2233;
-  }
-
-  .page { display: none; }
-  .page.active { display: block; }
-
-  .refresh-btn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background: #0d2233;
-    border: 1px solid var(--cyan);
-    border-radius: 8px;
-    color: var(--cyan);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    cursor: pointer;
-    margin-bottom: 12px;
-    text-align: center;
-  }
-
-  .refresh-btn:active { opacity: 0.7; }
-
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: var(--gray);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-  }
-
-  .temp-canvas-wrap { position: relative; }
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+:root{--bg:#0a1625;--bg2:#0d1e30;--cyan:#33bbee;--orange:#cc7733;--red:#ff7777;--green:#55cc88;--yellow:#eecc44;--gray:#aaccdd;--dim:#335566;--moon:#556688;--white:#ffffff;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--white);font-family:'Noto Sans JP',sans-serif;min-height:100vh;padding:12px;}
+h1{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray);text-align:center;margin-bottom:10px;letter-spacing:2px;opacity:0.5;}
+.card{background:var(--bg2);border:1px solid var(--dim);border-radius:12px;padding:12px;margin-bottom:10px;}
+.card-title{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--white);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;background:#1a3a1a;color:var(--green);}
+.badge.dummy{background:#3a3a1a;color:var(--yellow);}
+.info-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--gray);margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+canvas{width:100%;border-radius:6px;display:block;}
+.x-axis{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;margin-top:4px;padding:0 2px;overflow:hidden;}
+.done-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-family:'JetBrains Mono',monospace;}
+.done-text{font-size:14px;font-weight:700;color:var(--red);}
+.done-text.pending{color:var(--orange);font-size:12px;}
+.legend{font-size:10px;color:var(--orange);}
+.detail-section{margin-top:10px;border-top:1px solid var(--dim);padding-top:8px;}
+.detail-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);font-weight:700;margin-bottom:6px;}
+.detail-row{display:flex;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;margin-bottom:3px;}
+.detail-label{color:var(--cyan);min-width:52px;}
+.detail-val{color:var(--white);flex:1;word-break:break-all;}
+.tab-bar{display:flex;gap:8px;margin-bottom:10px;}
+.tab{flex:1;padding:10px;border-radius:8px;border:1px solid var(--dim);background:var(--bg2);color:var(--gray);font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer;text-align:center;transition:all 0.2s;}
+.tab.active{border-color:var(--cyan);color:var(--cyan);background:#0d2233;}
+.page{display:none;}.page.active{display:block;}
+.refresh-btn{display:block;width:100%;padding:10px;background:#0d2233;border:1px solid var(--cyan);border-radius:8px;color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer;margin-bottom:10px;text-align:center;}
+.refresh-btn:active{opacity:0.7;}
+.loading{text-align:center;padding:40px;color:var(--gray);font-family:'JetBrains Mono',monospace;font-size:13px;}
+.slider-wrap{margin:10px 0 6px;}
+.slider-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;}
+.slider-label .sl-val{color:var(--yellow);font-size:15px;font-weight:700;background:#0d2233;padding:2px 10px;border-radius:6px;border:1px solid var(--cyan);}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:4px;background:var(--dim);outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--cyan);border:3px solid var(--bg2);box-shadow:0 0 8px rgba(51,187,238,0.6);}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--cyan);border:3px solid var(--bg2);}
+.slider-ticks{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--moon);margin-top:4px;padding:0 4px;}
 </style>
 </head>
 <body>
 <h1>WEATHER WIDGET</h1>
-
 <div class="tab-bar">
-  <div class="tab active" onclick="switchTab('laundry')">🧺 洗濯</div>
-  <div class="tab" onclick="switchTab('temp')">📈 気温</div>
+  <div class="tab active" onclick="switchTab('laundry',this)">🧺 洗濯</div>
+  <div class="tab" onclick="switchTab('temp',this)">📈 気温</div>
 </div>
-
 <button class="refresh-btn" onclick="init()">🔄 更新</button>
-
 <div id="page-laundry" class="page active">
   <div id="laundry-loading" class="loading">データ取得中...</div>
   <div id="laundry-content" style="display:none"></div>
 </div>
-
 <div id="page-temp" class="page">
   <div id="temp-loading" class="loading">データ取得中...</div>
   <div id="temp-content" style="display:none"></div>
 </div>
-
 <script>
-// ===== PARAMS =====
-const PARAMS = {
-  k: 59, alpha: 0.50, W0: 500, Weq: 30,
-  nightFactor: 0.05, dawnMinutes: 45,
-  Ea_R: 5000, T_ref: 298.15, dryingExponent: 1.3,
-};
+const PARAMS={k:59,alpha:0.50,W0:500,Weq:30,nightFactor:0.05,dawnMinutes:45,Ea_R:5000,T_ref:298.15,dryingExponent:1.3};
+let allWeatherData=null;
 
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  event.target.classList.add('active');
+function switchTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
 }
 
-// ===== WEATHER FETCH =====
-async function fetchWeather(lat, lon) {
-  const url = "https://api.open-meteo.com/v1/forecast"
-    + "?latitude=" + lat.toFixed(4) + "&longitude=" + lon.toFixed(4)
-    + "&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,cloudcover,precipitation"
-    + "&daily=sunrise,sunset"
-    + "&forecast_days=2&timezone=auto&windspeed_unit=ms";
-  const res = await fetch(url);
-  return await res.json();
+async function fetchWeather(lat,lon){
+  const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat.toFixed(4)+"&longitude="+lon.toFixed(4)+"&hourly=temperature_2m,relativehumidity_2m,windspeed_10m,cloudcover,precipitation&daily=sunrise,sunset&forecast_days=2&timezone=auto&windspeed_unit=ms");
+  return r.json();
+}
+async function fetchTempWeather(lat,lon){
+  const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+lat.toFixed(4)+"&longitude="+lon.toFixed(4)+"&hourly=temperature_2m&timezone=auto&forecast_days=2");
+  return r.json();
 }
 
-async function fetchTempWeather(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&hourly=temperature_2m&timezone=auto&forecast_days=2`;
-  const res = await fetch(url);
-  return await res.json();
+function parseAllWeather(json){
+  const sunrises=json.daily.sunrise.map(s=>new Date(s));
+  const sunsets=json.daily.sunset.map(s=>new Date(s));
+  const now=new Date();
+  const result=[];
+  for(let i=0;i<json.hourly.time.length;i++){
+    const t=new Date(json.hourly.time[i]);
+    if(t<now&&result.length===0)continue;
+    const dayOffset=(t.getDate()!==sunrises[0].getDate())?1:0;
+    const sunrise=sunrises[Math.min(dayOffset,sunrises.length-1)];
+    const sunset=sunsets[Math.min(dayOffset,sunsets.length-1)];
+    result.push({
+      time:String(t.getHours()).padStart(2,'0')+":"+String(t.getMinutes()).padStart(2,'0'),
+      temp:json.hourly.temperature_2m[i],rh:json.hourly.relativehumidity_2m[i],
+      wind:json.hourly.windspeed_10m[i],cloud:json.hourly.cloudcover[i]??50,
+      precip:json.hourly.precipitation[i]??0,sunrise,sunset,epochMs:t.getTime(),isReal:true,
+    });
+    if(result.length>=36)break;
+  }
+  return result;
 }
 
-function getDummyWeather() {
-  const now = new Date();
-  const base = new Date(now); base.setHours(0,0,0,0);
-  const dsr = new Date(base.getTime() + 6*3600000);
-  const dss = new Date(base.getTime() + 18*3600000);
-  return Array.from({length:12}, (_,i) => {
-    const d = new Date(now.getTime() + i*3600000);
-    const sameDay = d.getDate() === dsr.getDate();
-    const sunrise = sameDay ? dsr : new Date(dsr.getTime()+86400000);
-    const sunset  = sameDay ? dss : new Date(dss.getTime()+86400000);
-    const h = d.getHours();
-    const isNight = h < 6 || h >= 19;
-    return {
-      time: String(h).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0'),
-      temp: isNight ? 14+Math.sin(i*0.4)*2 : 22+Math.sin(i*0.5)*3,
-      rh: isNight ? 80+Math.cos(i*0.3)*5 : 55+Math.cos(i*0.7)*10,
-      wind: 1.0+Math.abs(Math.sin(i*0.4))*1.5,
-      cloud: isNight ? 30 : 20+Math.abs(Math.sin(i*0.6))*40,
-      precip: 0,
-      sunrise, sunset, epochMs: d.getTime(), isReal: false,
-    };
+function getDummyWeather(){
+  const now=new Date(),base=new Date(now);base.setHours(0,0,0,0);
+  const dsr=new Date(base.getTime()+6*3600000),dss=new Date(base.getTime()+18*3600000);
+  return Array.from({length:36},(_,i)=>{
+    const d=new Date(now.getTime()+i*3600000);
+    const sameDay=d.getDate()===dsr.getDate();
+    const sunrise=sameDay?dsr:new Date(dsr.getTime()+86400000);
+    const sunset=sameDay?dss:new Date(dss.getTime()+86400000);
+    const h=d.getHours(),isNight=h<6||h>=19;
+    return{time:String(h).padStart(2,'0')+":"+String(d.getMinutes()).padStart(2,'0'),
+      temp:isNight?14+Math.sin(i*0.4)*2:22+Math.sin(i*0.5)*3,
+      rh:isNight?80+Math.cos(i*0.3)*5:55+Math.cos(i*0.7)*10,
+      wind:1.0+Math.abs(Math.sin(i*0.4))*1.5,cloud:isNight?30:20+Math.abs(Math.sin(i*0.6))*40,
+      precip:0,sunrise,sunset,epochMs:d.getTime(),isReal:false};
   });
 }
 
-// ===== LAUNDRY PHYSICS =====
-function computeVPD(temp, rh) {
-  const es = 0.6108 * Math.exp((17.27*temp)/(temp+237.3));
-  return Math.max(0, es*(1-rh/100));
+function computeVPD(t,rh){const es=0.6108*Math.exp((17.27*t)/(t+237.3));return Math.max(0,es*(1-rh/100));}
+function arrF(t){const T=t+273.15;return Math.exp(-PARAMS.Ea_R*(1/T-1/PARAMS.T_ref));}
+function sunF(ms,sr,ss,cloud,precip){
+  if(!sr||!ss)return 0.5;
+  const tw=PARAMS.dawnMinutes*60000,nf=PARAMS.nightFactor,sig=x=>1/(1+Math.exp(-x));
+  const dtR=ms-sr.getTime(),dtS=ms-ss.getTime();
+  let b;
+  if(dtR<-tw)b=nf;else if(dtR<=tw)b=nf+(1-nf)*sig(dtR/(tw/6));
+  else if(dtS<-tw)b=1.0;else if(dtS<=tw)b=nf+(1-nf)*sig(-dtS/(tw/6));else b=nf;
+  if(b>nf+0.1)b*=(1.0-(cloud/100)*0.65);
+  if(precip>0.1)return 0;
+  return Math.max(nf,b);
 }
-function arrheniusFactor(temp_C) {
-  const T_K = temp_C+273.15;
-  return Math.exp(-PARAMS.Ea_R*(1/T_K - 1/PARAMS.T_ref));
-}
-function sunlightFactor(epochMs, sunrise, sunset, cloud, precip) {
-  if (!sunrise||!sunset) return 0.5;
-  const tw = PARAMS.dawnMinutes*60000;
-  const nf = PARAMS.nightFactor;
-  const sig = x => 1/(1+Math.exp(-x));
-  const dtR = epochMs-sunrise.getTime();
-  const dtS = epochMs-sunset.getTime();
-  let base;
-  if (dtR<-tw) base=nf;
-  else if (dtR<=tw) base=nf+(1-nf)*sig(dtR/(tw/6));
-  else if (dtS<-tw) base=1.0;
-  else if (dtS<=tw) base=nf+(1-nf)*sig(-dtS/(tw/6));
-  else base=nf;
-  if (base>nf+0.1) base *= (1.0-(cloud/100)*0.65);
-  if (precip>0.1) return 0;
-  return Math.max(nf, base);
-}
-function simulate(weather) {
-  let W = PARAMS.W0;
-  const results = [];
-  let doneTime=null, doneIdx=null;
-  for (let i=0; i<weather.length; i++) {
-    const {time,temp,rh,wind,cloud,precip,sunrise,sunset,epochMs} = weather[i];
-    const vpd=computeVPD(temp,rh);
-    const arrF=arrheniusFactor(temp);
-    const sunF=sunlightFactor(epochMs,sunrise,sunset,cloud,precip);
+function simulate(weather){
+  let W=PARAMS.W0;const results=[];let doneTime=null,doneIdx=null;
+  for(let i=0;i<weather.length;i++){
+    const{time,temp,rh,wind,cloud,precip,sunrise,sunset,epochMs}=weather[i];
+    const vpd=computeVPD(temp,rh),af=arrF(temp),sf=sunF(epochMs,sunrise,sunset,cloud,precip);
     const ratio=Math.min(1,Math.max(0,(W-PARAMS.Weq)/(PARAMS.W0-PARAMS.Weq)));
-    const ratioNL=Math.pow(ratio,PARAMS.dryingExponent);
     const pct=Math.min(100,Math.max(0,(1-ratio)*100));
-    results.push({time,temp,rh,wind,cloud,precip,vpd,arrF,sunF,pct,water:W,
-      isDay: sunF>(PARAMS.nightFactor+0.1)});
-    if (!doneTime && pct>=100) { doneTime=time; doneIdx=i; }
-    if (i<weather.length-1) {
-      const dW=-PARAMS.k*vpd*Math.pow(Math.max(0.1,wind),PARAMS.alpha)*arrF*sunF*ratioNL;
+    results.push({time,temp,rh,wind,cloud,precip,vpd,arrF:af,sunF:sf,pct,water:W,isDay:sf>(PARAMS.nightFactor+0.1)});
+    if(!doneTime&&pct>=100){doneTime=time;doneIdx=i;}
+    if(i<weather.length-1){
+      const dW=-PARAMS.k*vpd*Math.pow(Math.max(0.1,wind),PARAMS.alpha)*af*sf*Math.pow(ratio,PARAMS.dryingExponent);
       W=Math.max(PARAMS.Weq,W+dW);
     }
   }
-  return {results,doneTime,doneIdx};
+  return{results,doneTime,doneIdx};
 }
 
-// ===== LAUNDRY CANVAS =====
-function drawLaundryGraph(results, doneIdx, W, H) {
-  const canvas = document.createElement('canvas');
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const ML=8, MR=8, MT=8, MB=8;
-  const GW=W-ML-MR, GH=H-MT-MB;
-  const n=results.length;
-  const gx = i => ML+(n>1?i*GW/(n-1):GW/2);
-  const gy = p => MT+GH-(p/100)*GH;
-
-  ctx.fillStyle='#0a1625'; ctx.fillRect(0,0,W,H);
-
-  const step = n>1?GW/(n-1):GW;
-  for (let i=0;i<n;i++) {
-    const x0=Math.max(ML,gx(i)-step/2), x1=Math.min(ML+GW,gx(i)+step/2);
-    if (!results[i].isDay) { ctx.fillStyle='rgba(0,34,68,0.4)'; ctx.fillRect(x0,MT,x1-x0,GH); }
-    if (results[i].precip>0.1) { ctx.fillStyle='rgba(68,0,0,0.27)'; ctx.fillRect(x0,MT,x1-x0,GH); }
+function drawLaundryGraph(results,doneIdx,W,H){
+  const canvas=document.createElement('canvas');
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=W*dpr;canvas.height=H*dpr;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const ML=8,MR=8,MT=8,MB=8,GW=W-ML-MR,GH=H-MT-MB,n=results.length;
+  const gx=i=>ML+(n>1?i*GW/(n-1):GW/2),gy=p=>MT+GH-(p/100)*GH;
+  ctx.fillStyle='#0a1625';ctx.fillRect(0,0,W,H);
+  const step=n>1?GW/(n-1):GW;
+  for(let i=0;i<n;i++){
+    const x0=Math.max(ML,gx(i)-step/2),x1=Math.min(ML+GW,gx(i)+step/2);
+    if(!results[i].isDay){ctx.fillStyle='rgba(0,34,68,0.4)';ctx.fillRect(x0,MT,x1-x0,GH);}
+    if(results[i].precip>0.1){ctx.fillStyle='rgba(68,0,0,0.27)';ctx.fillRect(x0,MT,x1-x0,GH);}
   }
-  for (let i=0;i<n;i++) { ctx.strokeStyle='#1e3a50'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(gx(i),MT); ctx.lineTo(gx(i),MT+GH); ctx.stroke(); }
-  for (let p=0;p<=100;p+=10) { ctx.strokeStyle='#1e3a50'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(ML,gy(p)); ctx.lineTo(ML+GW,gy(p)); ctx.stroke(); }
-  for (const hl of [70,80,90]) { ctx.strokeStyle='#cc7733'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(ML,gy(hl)); ctx.lineTo(ML+GW,gy(hl)); ctx.stroke(); }
-  if (doneIdx!==null) { ctx.strokeStyle='#ff5555'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(gx(doneIdx),MT); ctx.lineTo(gx(doneIdx),MT+GH); ctx.stroke(); }
-
-  ctx.strokeStyle='#33bbee'; ctx.lineWidth=2.5;
-  ctx.beginPath();
-  for (let i=0;i<n;i++) {
-    const pt=[gx(i),gy(results[i].pct)];
-    i===0?ctx.moveTo(...pt):ctx.lineTo(...pt);
-  }
+  for(let i=0;i<n;i++){ctx.strokeStyle='#1e3a50';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(gx(i),MT);ctx.lineTo(gx(i),MT+GH);ctx.stroke();}
+  for(let p=0;p<=100;p+=10){ctx.strokeStyle='#1e3a50';ctx.lineWidth=0.8;ctx.beginPath();ctx.moveTo(ML,gy(p));ctx.lineTo(ML+GW,gy(p));ctx.stroke();}
+  for(const hl of[70,80,90]){ctx.strokeStyle='#cc7733';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(ML,gy(hl));ctx.lineTo(ML+GW,gy(hl));ctx.stroke();}
+  if(doneIdx!==null){ctx.strokeStyle='#ff5555';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(gx(doneIdx),MT);ctx.lineTo(gx(doneIdx),MT+GH);ctx.stroke();}
+  ctx.strokeStyle='#33bbee';ctx.lineWidth=2.5;ctx.beginPath();
+  for(let i=0;i<n;i++){const pt=[gx(i),gy(results[i].pct)];i===0?ctx.moveTo(...pt):ctx.lineTo(...pt);}
   ctx.stroke();
-
-  for (let i=0;i<n;i++) {
-    ctx.fillStyle=results[i].isDay?'#ffffff':'#556688';
-    ctx.beginPath(); ctx.arc(gx(i),gy(results[i].pct),3.5,0,Math.PI*2); ctx.fill();
-  }
-
-  ctx.strokeStyle='#557799'; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(ML,MT); ctx.lineTo(ML,MT+GH); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(ML,MT+GH); ctx.lineTo(ML+GW,MT+GH); ctx.stroke();
-
+  for(let i=0;i<n;i++){ctx.fillStyle=results[i].isDay?'#ffffff':'#556688';ctx.beginPath();ctx.arc(gx(i),gy(results[i].pct),3.5,0,Math.PI*2);ctx.fill();}
+  ctx.strokeStyle='#557799';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(ML,MT);ctx.lineTo(ML,MT+GH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ML,MT+GH);ctx.lineTo(ML+GW,MT+GH);ctx.stroke();
   return canvas;
 }
 
-// ===== TEMP CANVAS =====
-function drawTempGraph(data, allData, startOffset, showCurrent, W, H, minT, maxT) {
-  const canvas = document.createElement('canvas');
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const range = maxT - minT;
-  const xpos = (i, len) => (i/(len-1))*W;
-  const ypos = t => H-((t-minT)/range)*H;
-
-  // 15度ライン
-  const y15 = ypos(15);
-  if (y15>=0 && y15<=H) {
-    ctx.strokeStyle='#888888'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(0,y15); ctx.lineTo(W,y15); ctx.stroke();
-    ctx.fillStyle='#888888'; ctx.font='9px JetBrains Mono,monospace';
-    ctx.fillText('15°C', W-36, y15-3);
-  }
-
-  // 折れ線
-  ctx.strokeStyle='#FF9F0A'; ctx.lineWidth=2;
-  ctx.beginPath();
-  for (let i=0;i<data.length;i++) {
-    const x=xpos(i,data.length), y=ypos(data[i].temp);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  }
-  ctx.stroke();
-
-  // ドット
-  ctx.fillStyle='#FF9F0A';
-  for (let i=0;i<data.length;i++) {
-    ctx.beginPath(); ctx.arc(xpos(i,data.length),ypos(data[i].temp),2,0,Math.PI*2); ctx.fill();
-  }
-
-  // 12時/23時縦線
-  for (let idx=0;idx<allData.length;idx++) {
-    const d=allData[idx];
-    const is12=d.hour===12, is23=d.hour===23;
-    if (!is12&&!is23) continue;
-    const rel=idx-startOffset;
-    if (rel>=0&&rel<data.length) {
-      const x=xpos(rel,data.length);
-      ctx.strokeStyle=is12?'#ffffff':'#FF3B30'; ctx.lineWidth=is12?1:1.5;
-      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
-    }
-  }
-
-  // 統計
-  const temps = data.map(d=>d.temp);
-  const tMax=Math.max(...temps), tMin=Math.min(...temps);
-  const sorted=[...temps].sort((a,b)=>a-b);
-  const tMed=sorted[Math.floor(sorted.length/2)];
-
-  [[tMax,'#FF3B30'],[tMin,'#5E5CE6'],[tMed,'#30B0C0']].forEach(([v,c])=>{
-    ctx.strokeStyle=c; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(0,ypos(v)); ctx.lineTo(W,ypos(v)); ctx.stroke();
-  });
-
-  // ラベル
-  ctx.font='bold 10px JetBrains Mono,monospace';
-  ctx.fillStyle='#FF3B30'; ctx.fillText(`最大${tMax}°`, 4, ypos(tMax)+12);
-
-  const items=[{v:tMed,c:'#30B0C0',l:'中央'},{v:tMin,c:'#5E5CE6',l:'最小'}];
-  let positions=items.map(item=>({...item,ty:ypos(item.v)-13}));
-  positions.sort((a,b)=>a.ty-b.ty);
-  for (let i=1;i<positions.length;i++) {
-    if (positions[i].ty<positions[i-1].ty+13) positions[i].ty=positions[i-1].ty+13;
-  }
-  positions.forEach(item=>{
-    ctx.fillStyle=item.c;
-    ctx.fillText(`${item.l}${item.v}°`, 4, Math.max(10, Math.min(H-2, item.ty)));
-  });
-
-  if (showCurrent && data.length>0) {
-    const cur=data[0].temp;
-    const x=xpos(0,data.length), y=ypos(cur);
-    ctx.fillStyle='#ffffff'; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#ffffff'; ctx.font='bold 12px JetBrains Mono,monospace';
-    ctx.fillText(`${cur}°C`, x+6, y-4);
-  }
-
-  return canvas;
-}
-
-// ===== RENDER LAUNDRY =====
-function renderLaundry(weather, isReal) {
-  const {results,doneTime,doneIdx}=simulate(weather);
-  const n=results.length;
-  const W=document.getElementById('page-laundry').clientWidth-24;
-  const H=Math.round(W*0.35);
-
-  const now=new Date();
-  const fmt2=v=>String(v).padStart(2,'0');
-  const sr=weather[0]?.sunrise;
-  const ss=weather[0]?.sunset;
-  const srStr=sr?fmt2(sr.getHours())+":"+fmt2(sr.getMinutes()):"--:--";
-  const ssStr=ss?fmt2(ss.getHours())+":"+fmt2(ss.getMinutes()):"--:--";
-
-  const d=results[0];
-  const T=+d.temp.toFixed(1),RH=+d.rh.toFixed(1),u=+d.wind.toFixed(2);
-  const es=0.6108*Math.exp((17.27*T)/(T+237.3));
-  const ea=es*RH/100,vpd=Math.max(0,es-ea);
-  const uA=Math.pow(Math.max(0.1,u),PARAMS.alpha);
-  const dW=-PARAMS.k*vpd*uA*d.arrF*d.sunF;
-
-  const canvas=drawLaundryGraph(results,doneIdx,W,H);
-
-  const xLabels=results.map(r=>`<span style="color:${r.isDay?'#aaccdd':'#556688'}">${r.time}</span>`).join('');
-
-  const detailRows=[
-    ['条件', `T=${T}℃ RH=${RH}% u=${u}m/s ☁️${Math.round(d.cloud)}%`],
-    ['日照', `🌅${srStr} 🌇${ssStr} 係数=${d.sunF.toFixed(2)}${d.isDay?"(昼)":"(夜)"}`],
-    ['VPD', `${es.toFixed(3)}−${ea.toFixed(3)} = ${vpd.toFixed(3)} kPa`],
-    ['Arr.', `${d.arrF.toFixed(3)}（${T}℃補正）`],
-    ['u^α', `${u}^${PARAMS.alpha} = ${uA.toFixed(3)}`],
-    ['dW/h', `${dW.toFixed(1)} g/h`],
-    ['残量', `${d.water.toFixed(0)}g / ${PARAMS.W0}g (${d.pct.toFixed(1)}%乾燥)`],
-  ].map(([l,v])=>`<div class="detail-row"><span class="detail-label">${l}</span><span class="detail-val">${v}</span></div>`).join('');
-
+function renderLaundry(allData,isReal){
   const wrap=document.getElementById('laundry-content');
   wrap.innerHTML='';
+  const maxStart=Math.max(0,allData.length-12);
 
-  const card=document.createElement('div');
-  card.className='card';
-  card.innerHTML=`
-    <div class="card-title">
-      🧺 洗濯物 乾き予測
-      <span class="badge ${isReal?'':'dummy'}">${isReal?'🛰 実況':'⚠️ ダミー'}</span>
-    </div>
-    <div class="info-row">
-      <span>🌅 ${srStr}</span><span>🌇 ${ssStr}</span>
-      <span style="margin-left:auto">☁️${Math.round(d.cloud)}%${d.precip>0.1?' 🌧'+d.precip.toFixed(1)+'mm':''}</span>
-    </div>
-  `;
-  card.appendChild(canvas);
-  card.innerHTML+=`
-    <div class="x-axis">${results.map(r=>`<span style="color:${r.isDay?'#aaccdd':'#556688'};font-size:10px">${r.time}</span>`).join('')}</div>
-    <div class="done-row">
-      <span class="${doneTime?'done-text':'done-text pending'}">${doneTime?'✅ 完了予測: '+doneTime:'⏳ 予測時間内に完了しない見込み'}</span>
-      <span class="legend">▬70 ▬80 ▬90%</span>
-    </div>
-    <div class="detail-section">
-      <div class="detail-title">■ 計算詳細（${results[0].time} 時点）</div>
-      ${detailRows}
-    </div>
-  `;
-  // re-append canvas since innerHTML wiped it
-  const placeholder=card.querySelector('canvas');
-  if(!placeholder) card.insertBefore(canvas, card.querySelector('.x-axis'));
+  const card=document.createElement('div');card.className='card';
+
+  // タイトル
+  const titleDiv=document.createElement('div');titleDiv.className='card-title';
+  titleDiv.innerHTML=`🧺 洗濯物 乾き予測 <span class="badge ${isReal?'':'dummy'}">${isReal?'🛰 実況':'⚠️ ダミー'}</span>`;
+  card.appendChild(titleDiv);
+
+  // スライダー
+  const sliderWrap=document.createElement('div');sliderWrap.className='slider-wrap';
+  const sliderLabel=document.createElement('div');sliderLabel.className='slider-label';
+  sliderLabel.innerHTML='🕐 洗濯開始: <span class="sl-val" id="sl-val">'+allData[0].time+'</span>';
+  const slider=document.createElement('input');
+  slider.type='range';slider.min=0;slider.max=maxStart;slider.value=0;slider.step=1;
+  const ticksDiv=document.createElement('div');ticksDiv.className='slider-ticks';
+  const tickN=Math.min(8,allData.length);
+  for(let i=0;i<tickN;i++){
+    const idx=Math.round(i*(allData.length-1)/(tickN-1));
+    const s=document.createElement('span');s.textContent=allData[idx].time;
+    ticksDiv.appendChild(s);
+  }
+  sliderWrap.appendChild(sliderLabel);sliderWrap.appendChild(slider);sliderWrap.appendChild(ticksDiv);
+  card.appendChild(sliderWrap);
+
+  // 動的エリア
+  const infoRow=document.createElement('div');infoRow.className='info-row';card.appendChild(infoRow);
+  const canvasWrap=document.createElement('div');card.appendChild(canvasWrap);
+  const xAxis=document.createElement('div');xAxis.className='x-axis';card.appendChild(xAxis);
+  const doneRow=document.createElement('div');doneRow.className='done-row';card.appendChild(doneRow);
+  const detailSec=document.createElement('div');detailSec.className='detail-section';card.appendChild(detailSec);
 
   wrap.appendChild(card);
+
+  function update(idx){
+    const weather=allData.slice(idx,idx+12);
+    const{results,doneTime,doneIdx}=simulate(weather);
+    const W=card.clientWidth-24,H=Math.round(W*0.35);
+    const fmt2=v=>String(v).padStart(2,'0');
+    const sr=weather[0]?.sunrise,ss=weather[0]?.sunset;
+    const srStr=sr?fmt2(sr.getHours())+":"+fmt2(sr.getMinutes()):"--:--";
+    const ssStr=ss?fmt2(ss.getHours())+":"+fmt2(ss.getMinutes()):"--:--";
+    const d=results[0];
+    const T=+d.temp.toFixed(1),RH=+d.rh.toFixed(1),u=+d.wind.toFixed(2);
+    const es=0.6108*Math.exp((17.27*T)/(T+237.3));
+    const ea=es*RH/100,vpd=Math.max(0,es-ea);
+    const uA=Math.pow(Math.max(0.1,u),PARAMS.alpha);
+    const dW=-PARAMS.k*vpd*uA*d.arrF*d.sunF;
+
+    document.getElementById('sl-val').textContent=allData[idx].time;
+    infoRow.innerHTML=`<span>🌅 ${srStr}</span><span>🌇 ${ssStr}</span><span style="margin-left:auto">☁️${Math.round(d.cloud)}%${d.precip>0.1?' 🌧'+d.precip.toFixed(1)+'mm':''}</span>`;
+    canvasWrap.innerHTML='';
+    canvasWrap.appendChild(drawLaundryGraph(results,doneIdx,W,H));
+    xAxis.innerHTML=results.map(r=>`<span style="color:${r.isDay?'#aaccdd':'#556688'}">${r.time}</span>`).join('');
+    doneRow.innerHTML=`<span class="${doneTime?'done-text':'done-text pending'}">${doneTime?'✅ 完了予測: '+doneTime:'⏳ 予測時間内に完了しない見込み'}</span><span class="legend">▬70 ▬80 ▬90%</span>`;
+    detailSec.innerHTML=`<div class="detail-title">■ 計算詳細（${results[0].time} 時点）</div>`+
+      [['条件',`T=${T}℃ RH=${RH}% u=${u}m/s ☁️${Math.round(d.cloud)}%`],
+       ['日照',`🌅${srStr} 🌇${ssStr} 係数=${d.sunF.toFixed(2)}${d.isDay?"(昼)":"(夜)"}`],
+       ['VPD',`${es.toFixed(3)}−${ea.toFixed(3)} = ${vpd.toFixed(3)} kPa`],
+       ['Arr.',`${d.arrF.toFixed(3)}（${T}℃補正）`],
+       ['u^α',`${u}^${PARAMS.alpha} = ${uA.toFixed(3)}`],
+       ['dW/h',`${dW.toFixed(1)} g/h`],
+       ['残量',`${d.water.toFixed(0)}g / ${PARAMS.W0}g (${d.pct.toFixed(1)}%乾燥)`],
+      ].map(([l,v])=>`<div class="detail-row"><span class="detail-label">${l}</span><span class="detail-val">${v}</span></div>`).join('');
+  }
+
+  slider.addEventListener('input',e=>update(parseInt(e.target.value)));
+  update(0);
   wrap.style.display='block';
   document.getElementById('laundry-loading').style.display='none';
 }
 
-// ===== RENDER TEMP =====
-function renderTemp(json) {
-  const 時間リスト=json.hourly.time;
-  const 気温リスト=json.hourly.temperature_2m;
-  const now=new Date();
-  const 現在時刻時=now.getHours();
-  let 開始=時間リスト.findIndex(t=>t.includes(`T${String(現在時刻時).padStart(2,'0')}:00`));
-  if(開始===-1) 開始=0;
-  let 明日=new Date(now); 明日.setDate(明日.getDate()+1); 明日.setHours(23,0,0,0);
-  let 明日23時=明日.toISOString().slice(0,13)+":00";
-  let 終了=時間リスト.findIndex(t=>t.startsWith(明日23時.slice(0,13)));
-  if(終了===-1) 終了=時間リスト.length-1;
-  if(終了<=開始) 終了=Math.min(開始+48,時間リスト.length-1);
-
-  const データ=[];
-  for(let i=開始;i<=終了;i++) {
-    const 時分=時間リスト[i].substring(11,16);
-    データ.push({時分,hour:parseInt(時分),temp:気温リスト[i]});
+function drawTempGraph(data,allData,startOffset,showCurrent,W,H,minT,maxT){
+  const canvas=document.createElement('canvas');
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const range=maxT-minT,xp=(i,l)=>(i/(l-1))*W,yp=t=>H-((t-minT)/range)*H;
+  const y15=yp(15);
+  if(y15>=0&&y15<=H){ctx.strokeStyle='#888888';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,y15);ctx.lineTo(W,y15);ctx.stroke();ctx.fillStyle='#888888';ctx.font='9px JetBrains Mono,monospace';ctx.fillText('15°C',W-36,y15-3);}
+  ctx.strokeStyle='#FF9F0A';ctx.lineWidth=2;ctx.beginPath();
+  for(let i=0;i<data.length;i++){const x=xp(i,data.length),y=yp(data[i].temp);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();
+  ctx.fillStyle='#FF9F0A';for(let i=0;i<data.length;i++){ctx.beginPath();ctx.arc(xp(i,data.length),yp(data[i].temp),2,0,Math.PI*2);ctx.fill();}
+  for(let idx=0;idx<allData.length;idx++){
+    const d=allData[idx],is12=d.hour===12,is23=d.hour===23;
+    if(!is12&&!is23)continue;
+    const rel=idx-startOffset;
+    if(rel>=0&&rel<data.length){const x=xp(rel,data.length);ctx.strokeStyle=is12?'#ffffff':'#FF3B30';ctx.lineWidth=is12?1:1.5;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
   }
-
-  const 分割=Math.ceil(データ.length/2);
-  const 上段=データ.slice(0,分割);
-  const 下段=データ.slice(分割);
-  const 全気温=データ.map(d=>d.temp);
-  const minT=Math.min(Math.min(...全気温)-2,13);
-  const maxT=Math.max(...全気温)+2;
-
-  const W=document.getElementById('page-temp').clientWidth-24;
-  const H=140;
-
-  const canvas上=drawTempGraph(上段,データ,0,true,W,H,minT,maxT);
-  const canvas下=drawTempGraph(下段,データ,分割,false,W,H,minT,maxT);
-
-  const wrap=document.getElementById('temp-content');
-  wrap.innerHTML='';
-  const card=document.createElement('div');
-  card.className='card';
-  card.innerHTML=`<div class="card-title">📈 気温推移（〜${明日.getMonth()+1}/${明日.getDate()} 23:00）</div>`;
-  card.appendChild(canvas上);
-  const sp=document.createElement('div'); sp.style.height='6px'; card.appendChild(sp);
-  card.appendChild(canvas下);
-  card.innerHTML+=`
-    <div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px">
-      <span style="color:#ffffff">⚪ 12:00</span>
-      <span style="color:#FF3B30">🔴 23:00</span>
-      <span style="color:#aaaaaa">赤:最大 青:最小 青緑:中央</span>
-    </div>
-  `;
-  wrap.appendChild(card);
-  wrap.style.display='block';
-  document.getElementById('temp-loading').style.display='none';
+  const temps=data.map(d=>d.temp),tMax=Math.max(...temps),tMin=Math.min(...temps),sorted=[...temps].sort((a,b)=>a-b),tMed=sorted[Math.floor(sorted.length/2)];
+  [[tMax,'#FF3B30'],[tMin,'#5E5CE6'],[tMed,'#30B0C0']].forEach(([v,c])=>{ctx.strokeStyle=c;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,yp(v));ctx.lineTo(W,yp(v));ctx.stroke();});
+  ctx.font='bold 10px JetBrains Mono,monospace';ctx.fillStyle='#FF3B30';ctx.fillText(`最大${tMax}°`,4,yp(tMax)+12);
+  const items=[{v:tMed,c:'#30B0C0',l:'中央'},{v:tMin,c:'#5E5CE6',l:'最小'}];
+  let pos=items.map(item=>({...item,ty:yp(item.v)-13}));pos.sort((a,b)=>a.ty-b.ty);
+  for(let i=1;i<pos.length;i++){if(pos[i].ty<pos[i-1].ty+13)pos[i].ty=pos[i-1].ty+13;}
+  pos.forEach(item=>{ctx.fillStyle=item.c;ctx.fillText(`${item.l}${item.v}°`,4,Math.max(10,Math.min(H-2,item.ty)));});
+  if(showCurrent&&data.length>0){const cur=data[0].temp,x=xp(0,data.length),y=yp(cur);ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#ffffff';ctx.font='bold 12px JetBrains Mono,monospace';ctx.fillText(`${cur}°C`,x+6,y-4);}
+  return canvas;
 }
 
-// ===== INIT =====
-async function init() {
+function renderTemp(json){
+  const ht=json.hourly.time,hT=json.hourly.temperature_2m;
+  const now=new Date(),ch=now.getHours();
+  let start=ht.findIndex(t=>t.includes(`T${String(ch).padStart(2,'0')}:00`));if(start===-1)start=0;
+  let tom=new Date(now);tom.setDate(tom.getDate()+1);tom.setHours(23,0,0,0);
+  let tom23=tom.toISOString().slice(0,13)+":00";
+  let end=ht.findIndex(t=>t.startsWith(tom23.slice(0,13)));
+  if(end===-1)end=ht.length-1;if(end<=start)end=Math.min(start+48,ht.length-1);
+  const data=[];
+  for(let i=start;i<=end;i++){const hm=ht[i].substring(11,16);data.push({時分:hm,hour:parseInt(hm),temp:hT[i]});}
+  const split=Math.ceil(data.length/2),top=data.slice(0,split),bot=data.slice(split);
+  const all=data.map(d=>d.temp),minT=Math.min(Math.min(...all)-2,13),maxT=Math.max(...all)+2;
+  const W=document.getElementById('page-temp').clientWidth-24,H=140;
+  const cTop=drawTempGraph(top,data,0,true,W,H,minT,maxT);
+  const cBot=drawTempGraph(bot,data,split,false,W,H,minT,maxT);
+  const wrap=document.getElementById('temp-content');wrap.innerHTML='';
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<div class="card-title">📈 気温推移（〜${tom.getMonth()+1}/${tom.getDate()} 23:00）</div>`;
+  card.appendChild(cTop);const sp=document.createElement('div');sp.style.height='6px';card.appendChild(sp);card.appendChild(cBot);
+  card.innerHTML+=`<div style="display:flex;justify-content:center;gap:12px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:#fff">⚪ 12:00</span><span style="color:#FF3B30">🔴 23:00</span><span style="color:#aaa">赤:最大 青:最小 青緑:中央</span></div>`;
+  wrap.appendChild(card);wrap.style.display='block';document.getElementById('temp-loading').style.display='none';
+}
+
+async function init(){
   document.getElementById('laundry-loading').style.display='block';
   document.getElementById('laundry-content').style.display='none';
   document.getElementById('temp-loading').style.display='block';
   document.getElementById('temp-content').style.display='none';
-
-  let lat=35.6895, lon=139.6917;
-  try {
-    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));
-    lat=pos.coords.latitude; lon=pos.coords.longitude;
-  } catch(e) {}
-
-  // Laundry
-  try {
+  let lat=35.6895,lon=139.6917;
+  try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));lat=pos.coords.latitude;lon=pos.coords.longitude;}catch(e){}
+  try{
     const json=await fetchWeather(lat,lon);
-    const sunrises=json.daily.sunrise.map(s=>new Date(s));
-    const sunsets=json.daily.sunset.map(s=>new Date(s));
-    const now=new Date();
-    const result=[];
-    for(let i=0;i<json.hourly.time.length&&result.length<12;i++) {
-      const t=new Date(json.hourly.time[i]);
-      if(t>=now||result.length>0) {
-        const dayOffset=(t.getDate()!==sunrises[0].getDate())?1:0;
-        const sunrise=sunrises[Math.min(dayOffset,sunrises.length-1)];
-        const sunset=sunsets[Math.min(dayOffset,sunsets.length-1)];
-        result.push({
-          time: String(t.getHours()).padStart(2,'0')+":"+String(t.getMinutes()).padStart(2,'0'),
-          temp: json.hourly.temperature_2m[i],
-          rh: json.hourly.relativehumidity_2m[i],
-          wind: json.hourly.windspeed_10m[i],
-          cloud: json.hourly.cloudcover[i]??50,
-          precip: json.hourly.precipitation[i]??0,
-          sunrise,sunset,epochMs:t.getTime(),isReal:true,
-        });
-      }
-    }
-    const weather=result.length>=4?result:getDummyWeather();
-    renderLaundry(weather, result.length>=4);
-  } catch(e) {
-    renderLaundry(getDummyWeather(), false);
-  }
-
-  // Temp
-  try {
-    const json=await fetchTempWeather(lat,lon);
-    renderTemp(json);
-  } catch(e) {
-    document.getElementById('temp-loading').textContent='気温データ取得失敗';
-  }
+    const parsed=parseAllWeather(json);
+    allWeatherData=parsed.length>=4?parsed:getDummyWeather();
+    renderLaundry(allWeatherData,parsed.length>=4);
+  }catch(e){allWeatherData=getDummyWeather();renderLaundry(allWeatherData,false);}
+  try{const json=await fetchTempWeather(lat,lon);renderTemp(json);}
+  catch(e){document.getElementById('temp-loading').textContent='気温データ取得失敗';}
 }
 
-window.addEventListener('load', () => {
+window.addEventListener('load',()=>{
   init();
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(()=>{});
-  }
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 });
 </script>
 </body>
